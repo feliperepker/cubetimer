@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+generator erd {
+  provider = "prisma-erd-generator"
+}
+datasource db {
+  provider = "postgresql"
+  url  = env("DATABASE_URL")
+}
+
+model User {
+ id String @id @default(cuid())
+ name String
+ email String @unique
+ googleId String @unique
+ avatarUrl String?
+ createdAt DateTime @default(now())
+
+ times Time[]
+}
+
+model Time {
+  id String @id @default(cuid())
+  time String 
+  createdAt DateTime @default(now())
+  sequence String
+  userId String
+
+  user User @relation(fields: [userId], references: [id])
+}
