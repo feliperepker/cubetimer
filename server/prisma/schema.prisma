@@ -22,7 +22,7 @@ model User {
 
 model Time {
   id String @id @default(cuid())
-  time String 
+  time Int 
   createdAt DateTime @default(now())
   sequence String
   userId String

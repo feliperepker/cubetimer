@@ -22,13 +22,12 @@ export async function timeRoutes(fastify: FastifyInstance) {
     { onRequest: [authenticate] },
     async (request, reply) => {
       const createTime = z.object({
-        time: z.string(),
+        time: z.number(),
         sequence: z.string(),
         userId: z.string(),
       });
 
       const { time, sequence } = createTime.parse(request.body);
-
       await prisma.time.create({
         data: {
           time,

@@ -1,9 +1,9 @@
 "use client";
 import { AuthLayout } from "@/components/AuthLayout";
+import { TimeInfo } from "@/components/TimeInfo";
 import { Timer } from "@/components/Timer";
 import { Dosis } from "next/font/google";
 import { useEffect, useState } from "react";
-const dosis = Dosis({ subsets: ["latin"], weight: ["500"] });
 
 export default function TimerPage() {
   const [shuffle, setShuffle] = useState<string[]>();
@@ -39,22 +39,13 @@ export default function TimerPage() {
     <AuthLayout>
       <main className="flex  min-h-screen flex-col items-center justify-between p-24">
         <div className="max-w-7xl flex flex-col justify-center items-center">
-          <Timer />
+          <Timer sequence={shuffle?.toString()!} shuffleCube={shuffleCube} />
           <div className="flex flex-wrap w-full justify-center gap-3 mt-4">
             {shuffle?.map((item, idx) => {
               return <p key={idx}>{item}</p>;
             })}
           </div>
-          <div className="flex w-full justify-around mt-8">
-            <div className="text-center">
-              <p>Your Avarege time</p>
-              <p className={`text-lg ${dosis.className}`}>0:00:00.0</p>
-            </div>
-            <div className="text-center">
-              <p className="text-lg ">Your Best time</p>
-              <p className={`text-lg ${dosis.className}`}>0:00:00.0</p>
-            </div>
-          </div>
+          <TimeInfo />
         </div>
       </main>
     </AuthLayout>
