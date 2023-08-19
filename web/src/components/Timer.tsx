@@ -1,15 +1,19 @@
 "use client";
+import { formatTime } from "@/app/helper/formatTime";
 import { api } from "@/services/api";
 import { Dosis } from "next/font/google";
 import { useState, useEffect, useRef } from "react";
+import { TimeInfoProps } from "./TimeInfo";
 const dosis = Dosis({ subsets: ["latin"], weight: ["500"] });
 
 interface TimerProps {
   shuffleCube: () => void;
   sequence: string;
+  setTimes: any;
+  times: TimeInfoProps[];
 }
 
-export function Timer({ shuffleCube, sequence }: TimerProps) {
+export function Timer({ shuffleCube, sequence, times, setTimes }: TimerProps) {
   const [startTime, setStartTime] = useState<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
@@ -49,18 +53,11 @@ export function Timer({ shuffleCube, sequence }: TimerProps) {
   const stopTimer = () => {
     setIsRunning(false);
     setTimeInDb(elapsedTime);
+    setTimes([
+      ...times,
+      { id: "", time: elapsedTime, createdAt: "", sequence: sequence },
+    ]);
     shuffleCube();
-  };
-
-  const formatTime = () => {
-    const hours = Math.floor(elapsedTime / 3600000);
-    const minutes = Math.floor((elapsedTime % 3600000) / 60000);
-    const seconds = Math.floor((elapsedTime % 60000) / 1000);
-    const milliseconds = Math.floor(elapsedTime % 1000);
-
-    return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds
-      .toString()
-      .padStart(2, "0")}.${milliseconds.toString().padStart(3, "0")}`;
   };
 
   useEffect(() => {
@@ -86,10 +83,12 @@ export function Timer({ shuffleCube, sequence }: TimerProps) {
         Press the button or the space key to {isRunning ? "stop" : "start"} the
         timer.
       </p>
-      <p className={`${dosis.className} text-5xl mt-4`}>{formatTime()}</p>
+      <p className={`${dosis.className} text-5xl mt-4`}>
+        {formatTime(elapsedTime)}
+      </p>
       <button
         onClick={isRunning ? stopTimer : startTimer}
-        className="mt-10 bg-purple-600 hover:bg-purple-500 duration-300 rounded w-2/3 min-w-[300px] h-20"
+        className="mt-8 bg-purple-600 hover:bg-purple-500 w-[30vw] max-w-[500px] duration-300 rounded  min-w-[300px] h-20"
       >
         {isRunning ? "Stop" : "Start"}
       </button>

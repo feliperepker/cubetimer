@@ -1,15 +1,19 @@
 "use client";
 import { AuthLayout } from "@/components/AuthLayout";
-import { TimeInfo } from "@/components/TimeInfo";
+import { DeleteLast } from "@/components/DeleteLast";
+import { TimeInfo, TimeInfoProps } from "@/components/TimeInfo";
 import { Timer } from "@/components/Timer";
-import { Dosis } from "next/font/google";
+import { api } from "@/services/api";
 import { useEffect, useState } from "react";
 
 export default function TimerPage() {
   const [shuffle, setShuffle] = useState<string[]>();
-
+  const [times, setTimes] = useState<TimeInfoProps[]>();
   useEffect(() => {
     shuffleCube();
+    api.get("/time/findbyuser").then((response) => {
+      setTimes(response.data.time);
+    });
   }, []);
 
   function shuffleCube() {
@@ -39,13 +43,19 @@ export default function TimerPage() {
     <AuthLayout>
       <main className="flex  min-h-screen flex-col items-center justify-between p-24">
         <div className="max-w-7xl flex flex-col justify-center items-center">
-          <Timer sequence={shuffle?.toString()!} shuffleCube={shuffleCube} />
-          <div className="flex flex-wrap w-full justify-center gap-3 mt-4">
+          <Timer
+            sequence={shuffle?.toString()!}
+            shuffleCube={shuffleCube}
+            times={times!}
+            setTimes={setTimes}
+          />
+          <div className="flex flex-wrap w-full justify-center gap-3 mt-6">
             {shuffle?.map((item, idx) => {
               return <p key={idx}>{item}</p>;
             })}
           </div>
-          <TimeInfo />
+          <TimeInfo times={times!} />
+          <DeleteLast times={times!} setTimes={setTimes} />
         </div>
       </main>
     </AuthLayout>

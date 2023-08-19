@@ -17,10 +17,10 @@ export function Header(props: HeaderProps) {
         </h1>
         <div className="h-full flex gap-4">
           <nav className="flex gap-4 transition-all items-center text-sm">
-            <a href="/" className="hover:text-gray-200">
+            <a href="/timer" className="hover:text-gray-200">
               Timer
             </a>
-            <a href="" className="hover:text-gray-200">
+            <a href="/progress" className="hover:text-gray-200">
               Progress
             </a>
           </nav>

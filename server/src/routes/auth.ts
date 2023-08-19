@@ -2,6 +2,7 @@ import { z } from "zod";
 import { prisma } from "../lib/prisma";
 import { FastifyInstance } from "fastify";
 import { authenticate } from "../plugins/authenticate";
+import fetch from "node-fetch";
 
 export async function authRoutes(fastify: FastifyInstance) {
   fastify.get("/me", { onRequest: [authenticate] }, async (request) => {

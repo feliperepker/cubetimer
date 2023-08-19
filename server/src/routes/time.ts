@@ -16,6 +16,25 @@ export async function timeRoutes(fastify: FastifyInstance) {
       return { time };
     }
   );
+  fastify.delete(
+    "/time/deletelast",
+    { onRequest: [authenticate] },
+    async (request, reply) => {
+      const lastRecord = await prisma.time.findFirst({
+        orderBy: [
+          { createdAt: "desc" }, // or { id: 'desc' } if using the id for sorting
+        ],
+      });
+      if (!lastRecord) {
+        return reply.code(404).send({ message: "No records found" });
+      }
+      await prisma.time.delete({
+        where: { id: lastRecord.id },
+      });
+
+      return { message: "Last record deleted successfully" };
+    }
+  );
 
   fastify.post(
     "/time",
